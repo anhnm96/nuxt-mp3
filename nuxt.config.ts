@@ -9,4 +9,13 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  runtimeConfig: {
+    apiUrl: '',
+    apiKey: '',
+    secretKey: '',
+    version: '',
+    proxyHost: '',
+    proxyPort: '',
+    proxyAuth: '',
+  },
 })
