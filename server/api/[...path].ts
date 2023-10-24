@@ -1,6 +1,7 @@
+/* eslint-disable prettier/prettier */
 import crypto from 'node:crypto'
-import { text } from 'node:stream/consumers'
-import { HttpsProxyAgent } from 'https-proxy-agent'
+
+// import { HttpsProxyAgent } from 'https-proxy-agent'
 
 function getHash256(str: string) {
   return crypto.createHash('sha256').update(str).digest('hex')
@@ -30,21 +31,36 @@ export default defineEventHandler(async (event) => {
 
   function hashParamHome(path: string) {
     return getHmac512(
-      path +
-        getHash256(`count=30ctime=${CTIME}page=1version=${config.version}`),
+      path
+        + getHash256(`count=30ctime=${CTIME}page=1version=${config.version}`),
       config.secretKey,
     )
   }
-  const agent = new HttpsProxyAgent({
-    host: config.proxyHost,
-    port: config.proxyPort,
-    auth: config.proxyAuth,
-  })
 
+  function hashParam(path: string, id: string) {
+    return getHmac512(
+      path + getHash256(`ctime=${CTIME}id=${id}version=${config.version}`),
+      config.secretKey,
+    )
+  }
+  // const agent = new HttpsProxyAgent({
+  //   host: config.proxyHost,
+  //   port: config.proxyPort,
+  //   auth: config.proxyAuth,
+  // })
+
+  let cookie: string
   function getCookie() {
-    return $fetch.raw(config.apiUrl, {}).then((res) => {
-      console.log('cookie', res.headers.getSetCookie())
-      return res.headers.getSetCookie()[1]
+    if (cookie) return cookie
+    return $fetch.raw(config.apiUrl).then((res) => {
+      cookie = res.headers.getSetCookie()[1]
+      const startIndex = cookie.indexOf('Max-Age')
+      const endIndex = cookie.indexOf(';', startIndex)
+      const age = Number(cookie.slice(startIndex + 8, endIndex)) - 5
+      setTimeout(() => {
+        cookie = ''
+      }, age)
+      return cookie
     })
   }
 
@@ -54,11 +70,15 @@ export default defineEventHandler(async (event) => {
       apiKey: config.apiKey,
       version: config.version,
       ctime: CTIME,
-      sig: hashParamHome(requestUrl.pathname),
+      sig: requestUrl.pathname.includes('get/home')
+        ? hashParamHome(requestUrl.pathname)
+        : query.id
+          ? hashParam(requestUrl.pathname, String(query.id))
+          : hashParamNoId(requestUrl.pathname),
       // agent,
       ...query,
     }
-    console.log('params', params)
+
     return await $fetch(requestUrl.pathname, {
       baseURL: config.apiUrl,
       params,
@@ -66,8 +86,7 @@ export default defineEventHandler(async (event) => {
         Cookie: cookie,
       },
     })
-  }
- catch (e: any) {
+  } catch (e: any) {
     const status = e?.response?.status || 500
     setResponseStatus(event, status)
     return {
