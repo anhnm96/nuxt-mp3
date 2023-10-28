@@ -4,7 +4,7 @@ import type { NuxtPage } from 'nuxt/schema'
 export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ['@pinia/nuxt'],
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/icons.css'],
   postcss: {
     plugins: {
       tailwindcss: {},
