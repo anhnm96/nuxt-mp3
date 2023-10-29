@@ -7,6 +7,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     'n/prefer-global/process': 'off',
     '@stylistic/ts/brace-style': 'off',
+    '@stylistic/js/operator-linebreak': 'off',
   },
   ignorePatterns: ['package.json', 'pnpm-lock.yaml'],
 }

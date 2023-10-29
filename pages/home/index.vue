@@ -21,6 +21,13 @@ const { data, pending } = await useAsyncData('home', () => getHome(1))
       <section v-if="section.sectionType === 'banner'" :key="index">
         <Banner :items="section.items" />
       </section>
+      <MediaList
+        v-if="section.sectionType === 'playlist'"
+        :key="index"
+        :items="section.items"
+        :title="section.title"
+        class="mt-7"
+      />
     </template>
   </template>
 </template>
