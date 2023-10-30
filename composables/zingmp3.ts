@@ -12,3 +12,7 @@ export async function fetchZingMp3(
 export function getHome(page: number): Promise<any> {
   return fetchZingMp3(`page/get/home`, { page, segmentId: -1, count: 30 })
 }
+
+export function getSongList(id: string) {
+  return fetchZingMp3('page/get/playlist', { id })
+}

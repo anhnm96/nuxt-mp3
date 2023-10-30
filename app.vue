@@ -53,7 +53,7 @@ useHead({
 
 <template>
   <div>
-    <div class="bg-layout flex">
+    <div class="flex bg-layout">
       <TheSidebar />
       <div class="flex-grow">
         <TheHeader />
@@ -63,6 +63,7 @@ useHead({
           </div>
         </main>
       </div>
+      <Playlist />
     </div>
   </div>
 </template>

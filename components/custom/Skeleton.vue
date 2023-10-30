@@ -10,12 +10,13 @@ const props = withDefaults(
     range?: RandomRange
   }>(),
   {
-    cssClass: 'bg-neutral-800 rounded',
+    cssClass: 'bg-neutral-500 rounded',
     auto: false,
     range: () => ({
       min: 20,
       max: 100,
     }),
+    animate: true,
   },
 )
 
@@ -29,8 +30,8 @@ const width = computed(() => {
 <template>
   <div
     aria-hidden="true"
-    class="animate-pulse overflow-hidden"
-    :class="[cssClass]"
+    class="overflow-hidden"
+    :class="[cssClass, { 'animate-pulse': animate }]"
     :style="{ width: auto === true ? width : '' }"
   >
     <slot />

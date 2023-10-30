@@ -1,3 +1,10 @@
+export enum PlayerState {
+  IDLE = 'IDLE',
+  LOADING = 'LOADING',
+  PLAYING = 'PLAYING',
+  PAUSE = 'PAUSE',
+}
+
 export interface Word {
   data: string
   startTime: number

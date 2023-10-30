@@ -11,7 +11,7 @@ withDefaults(
   {
     title: '',
     as: 'PlaylistCard',
-    itemClass: 'w-1/4 cxl:w-1/5',
+    itemClass: 'w-1/3 md:w-1/4 cxl:w-1/5',
   },
 )
 </script>
@@ -47,7 +47,7 @@ withDefaults(
       <CarouselItem
         v-for="item in items"
         :key="item.title"
-        class="flex-shrink-0 px-3"
+        class="flex-shrink-0 select-none px-3"
         :class="[itemClass]"
       >
         <PlaylistCard :item="item" />

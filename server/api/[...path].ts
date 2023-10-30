@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const requestUrl = getRequestURL(event)
   // eslint-disable-next-line no-console
-  console.log('Fetching TMDB API', requestUrl.pathname, requestUrl.search)
+  console.log('Fetching API', requestUrl.pathname, requestUrl.search)
 
   const config = useRuntimeConfig()
 

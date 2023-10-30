@@ -5,12 +5,27 @@ const props = defineProps<{
   item: Playlist
   showArtist?: boolean
 }>()
-
-function fetchListAndPlay() {}
+const playerStore = usePlayer()
+const { execute: fetchSongList } = useAsyncData(
+  'songlist',
+  () => getSongList(props.item.encodeId),
+  { immediate: false },
+)
 
 const isActive = computed<boolean>(() => {
-  return false
+  return (
+    props.item.encodeId === playerStore.playlist?.encodeId &&
+    playerStore.isPlaying
+  )
 })
+
+function fetchListAndPlay() {
+  if (isActive.value) {
+    playerStore.togglePlay()
+  } else {
+    fetchSongList()
+  }
+}
 </script>
 
 <template>
