@@ -8,7 +8,15 @@ const props = defineProps<{
 const playerStore = usePlayer()
 const { execute: fetchSongList } = useAsyncData(
   'songlist',
-  () => getSongList(props.item.encodeId),
+  () =>
+    getSongList(props.item.encodeId).then(({ data }) => {
+      playerStore.setState({ prop: 'playlist', value: data })
+      playerStore.setState({
+        prop: 'currentSong',
+        value: data.song.items[0],
+      })
+      return data
+    }),
   { immediate: false },
 )
 

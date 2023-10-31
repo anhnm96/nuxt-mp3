@@ -116,7 +116,7 @@ function close(e: MouseEvent) {
     right: 0;
     top: 0;
     z-index: 100;
-    background-color: var(--queue-playerStore-popup-bg);
+    background-color: var(--queue-player-popup-bg);
   }
 }
 

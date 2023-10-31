@@ -5,6 +5,12 @@ export enum PlayerState {
   PAUSE = 'PAUSE',
 }
 
+export enum PlayerMode {
+  DEFAULT = 'DEFAULT',
+  REPEAT_LIST = 'REPEAT_LIST',
+  REPEAT_SONG = 'REPEAT_SONG',
+}
+
 export interface Word {
   data: string
   startTime: number

@@ -1,4 +1,5 @@
-import { PlayerState } from '@/types'
+import { Howl } from 'howler'
+import { PlayerMode, PlayerState } from '@/types'
 import type { Playlist, Song } from '@/types'
 
 interface SetStatePayload {
@@ -6,18 +7,12 @@ interface SetStatePayload {
   value: any
 }
 
-export enum PlayerMode {
-  DEFAULT = 'DEFAULT',
-  REPEAT_LIST = 'REPEAT_LIST',
-  REPEAT_SONG = 'REPEAT_SONG',
-}
-
 let timeout: NodeJS.Timeout
 export const usePlayer = defineStore('player', {
   state: () => {
     return {
       showVideo: false,
-      howler: null,
+      howler: null as unknown as Howl,
       currentSong: null as unknown as Song,
       playlist: null as unknown as Playlist,
       seek: '0:00',
@@ -32,8 +27,41 @@ export const usePlayer = defineStore('player', {
       playerMode: PlayerMode.DEFAULT,
     }
   },
+  getters: {
+    songList(state): Song[] {
+      if (state.playlist === null) {
+        if (state.currentSong) return [state.currentSong]
+        return []
+      }
+      if (state.isShuffled) {
+        return state.shuffledList
+      } else {
+        return state.playlist.song.items
+      }
+    },
+    currentIndex(state) {
+      return this.songList.findIndex(
+        (song: Song) => song.encodeId === state.currentSong.encodeId,
+      )
+    },
+    previousSongs() {
+      if (this.currentIndex < 1) return []
+      return this.songList.slice(0, this.currentIndex)
+    },
+    nextSongs() {
+      if (this.currentIndex < 0) return []
+      return this.songList.slice(this.currentIndex + 1)
+    },
+    duration(state) {
+      return formatTime(state.currentSong.duration)
+    },
+    isPlaying(state) {
+      return state.playerState === PlayerState.PLAYING
+    },
+  },
   actions: {
     setState(payload: SetStatePayload) {
+      // @ts-expect-error
       this[payload.prop] = payload.value
     },
     setCurrentSong(payload: Song) {
@@ -111,68 +139,136 @@ export const usePlayer = defineStore('player', {
         this.howler.play()
       }
     },
-    fetchStreamingAction() {
+    async fetchStreamingAction() {
       // fetch streaming for current song
-      this.setState('playerState', PlayerState.LOADING)
-      // const {
-      //   exec: fetchStreamingData,
-      //   onSuccess: onFetchStreamingSuccess,
-      //   onError: onFetchStreamingFailed,
-      // } = useApi(fetchStreaming)
-      // fetchStreamingData(
-      //   state.currentSong.encodeId,
-      //   state.currentSong.isWorldWide
-      // )
+      this.setState({ prop: 'playerState', value: PlayerState.LOADING })
+      try {
+        const { data } = await useAsyncData('streaming', () =>
+          getStreaming(this.currentSong.encodeId, this.currentSong.isWorldWide),
+        )
 
-      // onFetchStreamingSuccess((result) => {
-      //   console.log('fetchStream', result)
-      //   dispatch('loadSong', result['128'])
-      // })
-
-      // onFetchStreamingFailed(() => {
-      //   show({
-      //     position: 'top-right',
-      //     type: 'danger',
-      //     title: 'Sorry, this content may not be available',
-      //     showProgressbar: false,
-      //   })
-      //   commit('setState', {
-      //     prop: 'playerState',
-      //     value: PlayerState.PAUSE,
-      //   })
-      // })
-    },
-  },
-  getters: {
-    songList(state): Song[] {
-      if (state.playlist === null) {
-        if (state.currentSong) return [state.currentSong]
-        return []
-      }
-      if (state.isShuffled) {
-        return state.shuffledList
-      } else {
-        return state.playlist.song.items
+        if (data.value.err === -1110) {
+          // show({
+          //   position: 'top-right',
+          //   type: 'danger',
+          //   title: 'Sorry, this content may not be available',
+          //   showProgressbar: false,
+          // })
+          this.setState({
+            prop: 'playerState',
+            value: PlayerState.PAUSE,
+          })
+          return
+        }
+        this.loadSong(data.value.data['128'])
+      } catch (error) {
+        console.log('error', error)
       }
     },
-    currentIndex(state) {
-      return this.songList.findIndex(
-        (song: Song) => song.encodeId === state.currentSong.encodeId,
-      )
+    loadSong(payload: string) {
+      // destroy Howl object
+      if (this.howler instanceof Howl) {
+        this.howler.unload()
+        clearTimeout(timeout)
+      }
+
+      this.setState({
+        prop: 'howler',
+        value: new Howl({
+          src: [payload],
+          html5: true,
+          volume: this.volume,
+          mute: this.isMuted,
+        }),
+      })
+
+      this.howler.on('play', () => {
+        console.log('play', this.currentSong.title)
+        // clear old timeout
+        clearTimeout(timeout)
+        document.title = `${this.currentSong.title} - ${this.currentSong.artistsNames} | Zing MP3`
+        this.setState({ prop: 'playerState', value: PlayerState.PLAYING })
+        this.progress()
+      })
+      this.howler.on('pause', () => {
+        clearTimeout(timeout)
+        document.title = 'Zing MP3'
+        // if we want howler load other song howler will pause -> unload
+        if (this.playerState !== PlayerState.LOADING)
+          this.setState({ prop: 'playerState', value: PlayerState.PAUSE })
+        console.log('pause', this.currentSong.title)
+      })
+      this.howler.on('unlock', () => {
+        console.log('unlock', this.currentSong.title)
+      })
+      this.howler.on('stop', () => {
+        console.log('stop', this.currentSong.title)
+        clearTimeout(timeout)
+        if (this.playerState !== PlayerState.LOADING)
+          this.setState({ prop: 'playerState', value: PlayerState.PAUSE })
+      })
+
+      this.howler.on('end', () => {
+        console.log('end', this.currentSong.title)
+        clearTimeout(timeout)
+        if (this.playerMode === PlayerMode.REPEAT_SONG) {
+          this.howler.play()
+          return
+        }
+        if (this.nextSongs.length === 0) {
+          if (this.playerMode === PlayerMode.REPEAT_LIST) {
+            this.setState({
+              prop: 'currentSong',
+              value: this.songList[0],
+            })
+          } else {
+            this.setState({
+              prop: 'playerState',
+              value: PlayerState.PAUSE,
+            })
+          }
+          return
+        }
+        this.setState({ prop: 'currentSong', value: this.nextSongs[0] })
+      })
+
+      this.updateMediaSessionMetaData()
+      this.howler.play()
     },
-    previousSongs() {
-      if (this.currentIndex < 1) return []
-      return this.songList.slice(0, this.currentIndex)
+    progress() {
+      timeout = setTimeout(() => {
+        // console.log('timemout')
+        const currentTime = this.howler.seek()
+        this.setState({ prop: 'seek', value: formatTime(currentTime) })
+        this.setState({
+          prop: 'currentTime',
+          value: currentTime,
+        })
+        this.progress()
+      }, 500)
     },
-    nextSongs() {
-      if (this.currentIndex < 0) return []
-      return this.songList.slice(this.currentIndex + 1)
+    updateSeek(time: number) {
+      // update playerProgress state
+      this.setState({ prop: 'currentTime', value: time })
+      // make howler seek to selected progress
+      this.howler?.seek(time)
     },
-    duration(state) {
-      return formatTime(state.currentSong.duration)
+    playNext() {
+      if (!this.nextSongs.length) return
+      this.setState({ prop: 'currentSong', value: this.nextSongs[0] })
     },
-    isPlaying(state) {
-      return state.playerState === PlayerState.PLAYING
+    playPrevious() {
+      console.log('playPrevious', this.previousSongs)
+      if (!this.previousSongs.length) return
+      this.setState({
+        prop: 'currentSong',
+        value: this.previousSongs[this.previousSongs.length - 1],
+      })
     },
   },
 })
+
+// make sure to pass the right store definition, `useAuth` in this case.
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(usePlayer, import.meta.hot))
+}

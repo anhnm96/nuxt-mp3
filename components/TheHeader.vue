@@ -2,21 +2,23 @@
 const route = useRoute()
 
 const disableBack = computed(() => {
+  if (process.server) return
   // use _path as dependency to force computed update
   const _path = route.path
-  return window.history.state.back === null
+  return window?.history.state.back === null
 })
 
 const disableForward = computed(() => {
+  if (process.server) return
   // use _path as dependency to force computed update
   const _path = route.path
-  return window.history.state.forward === null
+  return window?.history.state.forward === null
 })
 </script>
 
 <template>
   <header
-    class="h-17 bg-layout sticky top-0 z-20 flex items-center space-x-2 px-4 py-2 shadow-sm"
+    class="sticky top-0 z-20 flex h-17 items-center space-x-2 bg-layout px-4 py-2 shadow-sm"
   >
     <div class="flex flex-shrink-0 items-center">
       <button
@@ -24,34 +26,34 @@ const disableForward = computed(() => {
         :disabled="disableBack"
         @click="$router.back()"
       >
-        <i class="ic-back text-primary flex h-5 text-xl leading-normal" />
+        <i class="ic-back flex h-5 text-xl leading-normal text-primary" />
       </button>
       <button
         class="flex items-center p-2 disabled:cursor-not-allowed disabled:opacity-50"
         :disabled="disableForward"
         @click="$router.forward()"
       >
-        <i class="ic-forward text-primary flex h-5 text-xl leading-normal" />
+        <i class="ic-forward flex h-5 text-xl leading-normal text-primary" />
       </button>
     </div>
     <div class="flex flex-auto">
       <div class="relative mr-auto w-full max-w-xl">
         <button
-          class="hover:bg-alpha absolute top-1/2 z-10 -translate-y-1/2 transform rounded-full p-2 outline-none transition"
+          class="absolute top-1/2 z-10 -translate-y-1/2 transform rounded-full p-2 outline-none transition hover:bg-alpha"
           aria-label="search"
         >
-          <i class="text-secondary ic-search flex h-5 text-xl" />
+          <i class="ic-search flex h-5 text-xl text-secondary" />
         </button>
         <input
           type="text"
-          class="focus:bg-primary text-secondary bg-alpha block w-full rounded-full border-none py-2 pl-10 pr-6 text-sm outline-none focus:rounded-b-none focus:rounded-t-2xl"
+          class="block w-full rounded-full border-none bg-alpha py-2 pl-10 pr-6 text-sm text-secondary outline-none focus:rounded-b-none focus:rounded-t-2xl focus:bg-primary"
         />
       </div>
     </div>
     <div class="flex items-center space-x-2">
       <button
         aria-label="select theme"
-        class="bg-alpha flex h-10 w-10 items-center justify-center rounded-full"
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-alpha"
       >
         <svg class="h-5 w-5" viewBox="0 0 20 20">
           <defs>
@@ -196,15 +198,15 @@ const disableForward = computed(() => {
       </button>
       <button
         aria-label="upload"
-        class="bg-alpha flex h-10 w-10 items-center justify-center rounded-full"
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-alpha"
       >
-        <i class="ic-upload text-secondary flex h-5 w-5 text-xl" />
+        <i class="ic-upload flex h-5 w-5 text-xl text-secondary" />
       </button>
       <button
         aria-label="setting"
-        class="bg-alpha flex h-10 w-10 items-center justify-center rounded-full"
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-alpha"
       >
-        <i class="ic-settings text-secondary flex h-5 w-5 text-xl" />
+        <i class="ic-settings flex h-5 w-5 text-xl text-secondary" />
       </button>
       <button
         aria-label="profile"

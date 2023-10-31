@@ -16,3 +16,7 @@ export function getHome(page: number): Promise<any> {
 export function getSongList(id: string) {
   return fetchZingMp3('page/get/playlist', { id })
 }
+
+export function getStreaming(id: string, isWorldWide = true) {
+  return fetchZingMp3('song/get/streaming', { id, isWorldWide })
+}

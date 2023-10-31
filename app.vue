@@ -1,5 +1,44 @@
 <script setup lang="ts">
-const songList: any[] = []
+const playerStore = usePlayer()
+
+watch(
+  () => playerStore.currentSong,
+  () => {
+    playerStore.setState({ prop: 'currentTime', value: 0 })
+    playerStore.setState({ prop: 'seek', value: '0:00' })
+    playerStore.howler?.unload()
+    playerStore.fetchStreamingAction()
+  },
+)
+let resizeObserver: ResizeObserver
+onMounted(() => {
+  if (document.body.offsetWidth < 1637)
+    playerStore.setState({ prop: 'showPlaylist', value: false })
+
+  resizeObserver = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.contentBoxSize) {
+        // Firefox implements `contentBoxSize` as a single content rect, rather than an array
+        const contentBoxSize = Array.isArray(entry.contentBoxSize)
+          ? entry.contentBoxSize[0]
+          : entry.contentBoxSize
+
+        if (contentBoxSize.inlineSize < 1637)
+          playerStore.setState({ prop: 'showPlaylist', value: false })
+        else playerStore.setState({ prop: 'showPlaylist', value: true })
+      } else {
+        if (entry.contentRect.width < 1637)
+          playerStore.setState({ prop: 'showPlaylist', value: false })
+        else playerStore.setState({ prop: 'showPlaylist', value: true })
+      }
+    }
+  })
+  resizeObserver.observe(document.body)
+})
+
+onBeforeUnmount(() => {
+  resizeObserver.disconnect()
+})
 
 useHead({
   title: 'Zing MP3',
@@ -57,7 +96,7 @@ useHead({
       <TheSidebar />
       <div class="flex-grow">
         <TheHeader />
-        <main :class="songList.length > 0 ? 'h-main' : 'h-main-2'">
+        <main :class="playerStore.songList.length > 0 ? 'h-main' : 'h-main-2'">
           <div class="mx-auto py-5" style="max-width: 90%">
             <NuxtPage />
           </div>
@@ -65,5 +104,6 @@ useHead({
       </div>
       <Playlist />
     </div>
+    <Player v-if="playerStore.songList.length > 0" class="z-50" />
   </div>
 </template>
