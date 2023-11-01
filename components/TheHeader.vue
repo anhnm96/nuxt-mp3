@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
+const router = useRouter()
 
 const disableBack = computed(() => {
   if (process.server) return
@@ -14,6 +15,16 @@ const disableForward = computed(() => {
   const _path = route.path
   return window?.history.state.forward === null
 })
+
+function onSelect(item: any) {
+  if (item.type === undefined || item.type === 0) {
+    router.push({
+      name: 'search-all',
+      query: { q: item.keyword ? item.keyword : item },
+    })
+  }
+  // if (item.type === 1) execFetchSongInfo(item.id)
+}
 </script>
 
 <template>
@@ -47,6 +58,7 @@ const disableForward = computed(() => {
         <input
           type="text"
           class="block w-full rounded-full border-none bg-alpha py-2 pl-10 pr-6 text-sm text-secondary outline-none focus:rounded-b-none focus:rounded-t-2xl focus:bg-primary"
+          @keydown.enter="onSelect($event.target.value)"
         />
       </div>
     </div>

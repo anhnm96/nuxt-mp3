@@ -20,3 +20,15 @@ export function getSongList(id: string) {
 export function getStreaming(id: string, isWorldWide = true) {
   return fetchZingMp3('song/get/streaming', { id, isWorldWide })
 }
+
+export function getSearchCounter(q: string) {
+  return fetchZingMp3('search/getCounter', { q })
+}
+
+export function getSearchAll(q: string) {
+  return fetchZingMp3('search/multi', { q })
+}
+
+export function getSearch(q: string, type: string) {
+  return fetchZingMp3('search', { q, type })
+}
