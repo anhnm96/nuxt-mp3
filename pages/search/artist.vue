@@ -5,13 +5,8 @@ const {
   data: artists,
   status,
   pending,
-} = useAsyncData(
-  'getSearch',
-  () => getSearch(q, 'artist').then(({ data }) => data),
-  {
-    pick: 'items',
-    default: () => [],
-  },
+} = useAsyncData('getSearch', () =>
+  getSearch(q, 'artist').then(({ data }) => data.items),
 )
 </script>
 

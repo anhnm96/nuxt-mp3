@@ -5,12 +5,12 @@ withDefaults(
   defineProps<{
     title?: string
     items: Playlist[]
-    as?: string
+    itemAs?: string
     itemClass?: string
   }>(),
   {
     title: '',
-    as: 'PlaylistCard',
+    itemAs: 'PlaylistCard',
     itemClass: 'w-1/3 md:w-1/4 cxl:w-1/5',
   },
 )
@@ -50,7 +50,9 @@ withDefaults(
         class="flex-shrink-0 select-none px-3"
         :class="[itemClass]"
       >
-        <PlaylistCard :item="item" />
+        <LazyPlaylistCard v-if="itemAs === 'PlaylistCard'" :item="item" />
+        <LazyVideoCard v-if="itemAs === 'VideotCard'" :item="item" />
+        <LazyArtistCard v-if="itemAs === 'ArtistCard'" :item="item" />
       </CarouselItem>
     </template>
   </Carousel>

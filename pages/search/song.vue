@@ -7,9 +7,8 @@ const {
   pending,
 } = useAsyncData(
   'getSearch',
-  () => getSearch(q, 'song').then(({ data }) => data),
+  () => getSearch(q, 'song').then(({ data }) => data.items),
   {
-    pick: 'items',
     default: () => [],
   },
 )

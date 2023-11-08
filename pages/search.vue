@@ -77,7 +77,7 @@ const { data: counter } = await useAsyncData('searchCounter', () =>
       </ul>
     </div>
     <div class="mt-5">
-      <NuxtPage :key="$route.fullPath" />
+      <NuxtPage />
     </div>
   </div>
 </template>

@@ -5,7 +5,9 @@ const {
   data: search,
   pending,
   status,
-} = await useAsyncData('searchAll', () => getSearchAll(query))
+} = await useAsyncData('searchAll', () =>
+  getSearchAll(query).then(({ data }) => data),
+)
 </script>
 
 <template>
@@ -63,52 +65,46 @@ const {
       </div>
       <!-- Playlist/Album -->
       <div v-if="search.playlists" class="mt-8">
-        <!-- <PlaylistCarousel :items="search.playlists">
+        <MediaList :items="search.playlists">
           <h3 class="flex items-center text-xl font-bold">
-            <router-link
-              :to="{name: 'SearchPlaylist', query: {q: $route.query.q}}"
+            <NuxtLink
+              :to="{ name: 'search-playlist', query: { q: $route.query.q } }"
               class="flex items-center hover:text-link-hover"
             >
-              Playlist/Album
-              &nbsp;<i class="flex text-lg ic-go-right" />
-            </router-link>
+              Playlist/Album &nbsp;<i class="ic-go-right flex text-lg" />
+            </NuxtLink>
           </h3>
-        </PlaylistCarousel> -->
+        </MediaList>
       </div>
       <!-- mv -->
       <div v-if="search.videos" class="mt-8">
-        <!-- <PlaylistCarousel
+        <MediaList
           :items="search.videos"
-          :as="videoCard"
+          item-as="VideoCard"
           item-class="w-1/2 cxl:w-1/3"
         >
           <h3 class="flex items-center text-xl font-bold">
-            <router-link
-              :to="{name: 'SearchVideo', query: {q: $route.query.q}}"
+            <NuxtLink
+              :to="{ name: 'search-video', query: { q: $route.query.q } }"
               class="flex items-center hover:text-link-hover"
             >
-              MV
-              &nbsp;<i class="flex text-lg ic-go-right" />
-            </router-link>
+              MV &nbsp;<i class="ic-go-right flex text-lg" />
+            </NuxtLink>
           </h3>
-        </PlaylistCarousel> -->
+        </MediaList>
       </div>
       <!-- artists -->
       <div v-if="search.artists" class="mt-8">
-        <!-- <PlaylistCarousel
-          :items="search.artists"
-          :as="artistCard"
-        >
+        <MediaList :items="search.artists" item-as="ArtistCard">
           <h3 class="flex items-center text-xl font-bold">
-            <router-link
-              :to="{name: 'SearchArtist', query: {q: $route.query.q}}"
+            <NuxtLink
+              :to="{ name: 'search-artist', query: { q: $route.query.q } }"
               class="flex items-center hover:text-link-hover"
             >
-              Artists
-              &nbsp;<i class="flex text-lg ic-go-right" />
-            </router-link>
+              Artists &nbsp;<i class="ic-go-right flex text-lg" />
+            </NuxtLink>
           </h3>
-        </PlaylistCarousel> -->
+        </MediaList>
       </div>
     </template>
   </div>

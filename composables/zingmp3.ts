@@ -29,6 +29,6 @@ export function getSearchAll(q: string) {
   return fetchZingMp3('search/multi', { q })
 }
 
-export function getSearch(q: string, type: string) {
-  return fetchZingMp3('search', { q, type })
+export function getSearch(q: string, _type: string) {
+  return fetchZingMp3('search', { q })
 }

@@ -5,13 +5,8 @@ const {
   data: videos,
   status,
   pending,
-} = useAsyncData(
-  'getSearch',
-  () => getSearch(q, 'video').then(({ data }) => data),
-  {
-    pick: 'items',
-    default: () => [],
-  },
+} = useAsyncData('getSearch', () =>
+  getSearch(q, 'video').then(({ data }) => data.items),
 )
 </script>
 
