@@ -79,6 +79,16 @@ export default defineEventHandler(async (event) => {
       ...query,
     }
 
+    if (requestUrl.pathname.includes('/v1/web/ac-suggestions')) {
+      return await $fetch('/v1/web/ac-suggestions', {
+        baseURL: 'https://ac.zingmp3.vn',
+        params,
+        headers: {
+          Cookie: cookie,
+        },
+      })
+    }
+
     return await $fetch(requestUrl.pathname, {
       baseURL: config.apiUrl,
       params,

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const router = useRouter()
+const store = usePlayer()
 
 const disableBack = computed(() => {
   if (process.server) return
@@ -16,6 +17,46 @@ const disableForward = computed(() => {
   return window?.history.state.forward === null
 })
 
+const { data: hotKeywords } = useAsyncData('hot-keyword', () =>
+  getHotKeyword().then(({ data }) => data),
+)
+
+const searchTerm = ref<string>('')
+
+const { data: suggestions, execute: execGetSuggestions } = useAsyncData(
+  'suggestions',
+  () =>
+    getSuggestions(searchTerm.value).then(({ data }: any) => {
+      const arr = [...data.items[0].keywords]
+      if (data.items[1]) arr.push(...data.items[1].suggestions)
+      return arr
+    }),
+  { immediate: false, default: () => [] },
+)
+
+watch(
+  searchTerm,
+  debounce((newValue) => {
+    if (newValue === '') {
+      suggestions.value = hotKeywords.value
+      return
+    }
+    execGetSuggestions()
+  }, 300),
+  { immediate: true },
+)
+
+const selectedId = ref('')
+useAsyncData(
+  'song-info',
+  () =>
+    getSongInfo(selectedId.value).then(({ data }: any) => {
+      store.setState({ prop: 'playlist', value: null })
+      store.setState({ prop: 'currentSong', value: data })
+    }),
+  { watch: [selectedId], immediate: false },
+)
+
 function onSelect(item: any) {
   if (item.type === undefined || item.type === 0) {
     router.push({
@@ -23,7 +64,30 @@ function onSelect(item: any) {
       query: { q: item.keyword ? item.keyword : item },
     })
   }
-  // if (item.type === 1) execFetchSongInfo(item.id)
+  if (item.type === 1) selectedId.value = item.id
+}
+
+// adapter options for autocomplete input
+function optionAdapter(item: any) {
+  if (item.type === undefined) {
+    return {
+      id: item,
+      label: item,
+      value: item,
+    }
+  }
+  if (item.type === 0) {
+    return {
+      id: item.keyword,
+      label: item.keyword,
+      value: item,
+    }
+  }
+  return {
+    id: item.id,
+    label: item.title,
+    value: item,
+  }
 }
 </script>
 
@@ -55,11 +119,72 @@ function onSelect(item: any) {
         >
           <i class="ic-search flex h-5 text-xl text-secondary" />
         </button>
-        <input
-          type="text"
+        <Autocomplete
+          v-model:input="searchTerm"
+          :options="suggestions"
+          :option-adapter="optionAdapter"
           class="block w-full rounded-full border-none bg-alpha py-2 pl-10 pr-6 text-sm text-secondary outline-none focus:rounded-b-none focus:rounded-t-2xl focus:bg-primary"
-          @keydown.enter="onSelect($event.target.value)"
-        />
+          placeholder="Nhập tên bài hát, nghệ sĩ hoặc MV"
+          menu-class="py-3 px-2.5 mt-0 rounded-b-lg bg-primary"
+          :blur-on-select="true"
+          @select="onSelect"
+          @keydown.space.stop
+        >
+          <template #option="{ item, isActive, select }">
+            <div
+              v-if="item.value.type === 4"
+              class="flex select-none items-center space-x-2 truncate rounded-md px-4 py-2 text-sm text-primary hover:bg-alpha"
+              :class="isActive && 'bg-alpha'"
+              @click.stop
+            >
+              <div class="flex space-x-2">
+                <div class="h-10 w-10 flex-shrink-0">
+                  <img
+                    class="rounded-full"
+                    :src="item.value.avatar"
+                    :alt="item.value.name"
+                  />
+                </div>
+                <div>
+                  <p class="text-title">
+                    {{ item.value.name }}
+                  </p>
+                  <p class="text-secondary">
+                    Artist • {{ item.value.followers }} follows
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              v-else
+              class="flex select-none items-center space-x-2 truncate rounded-md px-4 py-2 text-sm text-primary hover:bg-alpha"
+              :class="isActive && 'bg-alpha'"
+              @click="select(item)"
+            >
+              <template v-if="item.value.type === undefined">
+                <i class="ic-search flex text-secondary" />
+                <span>{{ item.label }}</span>
+              </template>
+              <template v-if="item.value.type === 0">
+                <i class="ic-search flex text-secondary" />
+                <span>{{ item.value.keyword }}</span>
+              </template>
+              <div v-if="item.value.type === 1" class="flex space-x-2">
+                <div v-if="item.value.thumb" class="h-10 w-10 flex-shrink-0">
+                  <img :src="item.value.thumb" :alt="item.value.title" />
+                </div>
+                <div>
+                  <p class="text-title">
+                    {{ item.value.title }}
+                  </p>
+                  <p class="text-secondary">
+                    {{ item.value.artists[0].name }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </template>
+        </Autocomplete>
       </div>
     </div>
     <div class="flex items-center space-x-2">

@@ -18,8 +18,8 @@ const props = defineProps({
     default: 'shadow mt-2 bg-white',
   },
   options: {
-    type: Array,
-    default: (): any[] => [],
+    type: Array as PropType<any[]>,
+    default: () => [],
   },
   optionAdapter: {
     type: Function as PropType<(value: any) => AdaptedOption>,
@@ -169,7 +169,7 @@ function select(item: AdaptedOption) {
       payload.push(item.value)
     }
   } else {
-    inputValue.value = item.label
+    if (item.value.type !== 1) inputValue.value = item.label
     payload = item.value
     if (props.blurOnSelect) inputEl.value.blur()
     else inputEl.value.focus()
@@ -261,6 +261,6 @@ function safeSalect(item: AdaptedOption) {
 <style>
 .dropdown-content {
   overflow: auto;
-  max-height: 200px;
+  max-height: 400px;
 }
 </style>

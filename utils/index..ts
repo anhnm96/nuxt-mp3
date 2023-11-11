@@ -31,3 +31,15 @@ export function formatTime(time: number): string {
 
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
 }
+
+export function debounce(func: (...args: any) => void, delay = 0) {
+  let timer: NodeJS.Timeout
+  return (...args: any) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      // @ts-expect-error
+      // eslint-disable-next-line @typescript-eslint/no-invalid-this
+      func.apply(this, args)
+    }, delay)
+  }
+}

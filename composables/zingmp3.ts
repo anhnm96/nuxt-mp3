@@ -32,3 +32,15 @@ export function getSearchAll(q: string) {
 export function getSearch(q: string, _type: string) {
   return fetchZingMp3('search', { q })
 }
+
+export function getHotKeyword() {
+  return fetchZingMp3('app/get/hot-keyword')
+}
+
+export function getSongInfo(id: string) {
+  return fetchZingMp3('song/get/info', { id })
+}
+
+export function getSuggestions(query: string) {
+  return fetchZingMp3('v1/web/ac-suggestions', { query })
+}
