@@ -9,24 +9,22 @@ interface SetStatePayload {
 
 let timeout: NodeJS.Timeout
 export const usePlayer = defineStore('player', {
-  state: () => {
-    return {
-      showVideo: false,
-      howler: null as unknown as Howl,
-      currentSong: null as unknown as Song,
-      playlist: null as unknown as Playlist,
-      seek: '0:00',
-      currentTime: 0,
-      isMuted: false,
-      volume: 0.5,
-      playerState: PlayerState.IDLE,
-      showLyric: false,
-      showPlaylist: true,
-      isShuffled: false,
-      shuffledList: [] as Song[],
-      playerMode: PlayerMode.DEFAULT,
-    }
-  },
+  state: () => ({
+    showVideo: false,
+    howler: null as unknown as Howl,
+    currentSong: null as unknown as Song,
+    playlist: null as unknown as Playlist,
+    seek: '0:00',
+    currentTime: 0,
+    isMuted: false,
+    volume: 0.5,
+    playerState: PlayerState.IDLE,
+    showLyric: false,
+    showPlaylist: true,
+    isShuffled: false,
+    shuffledList: [] as Song[],
+    playerMode: PlayerMode.DEFAULT,
+  }),
   getters: {
     songList(state): Song[] {
       if (state.playlist === null) {
@@ -39,16 +37,16 @@ export const usePlayer = defineStore('player', {
         return state.playlist.song.items
       }
     },
-    currentIndex(state) {
+    currentIndex(state): number {
       return this.songList.findIndex(
         (song: Song) => song.encodeId === state.currentSong.encodeId,
       )
     },
-    previousSongs() {
+    previousSongs(): Song[] {
       if (this.currentIndex < 1) return []
       return this.songList.slice(0, this.currentIndex)
     },
-    nextSongs() {
+    nextSongs(): Song[] {
       if (this.currentIndex < 0) return []
       return this.songList.slice(this.currentIndex + 1)
     },
