@@ -44,3 +44,7 @@ export function getSongInfo(id: string) {
 export function getSuggestions(query: string) {
   return fetchZingMp3('v1/web/ac-suggestions', { query })
 }
+
+export function getPlaylistDetail(id: string) {
+  return fetchZingMp3('page/get/playlist', { id })
+}

@@ -64,8 +64,7 @@ function playBanner(item: any) {
     execute()
   }
   if (item.type === 4) {
-    console.log(item.link) // /playlist/Doa-Hong-Nhac-Viet/ZA9U9FCI.html
-    // router.push(item.link.split('.')[0])
+    router.push(item.link.split('.')[0])
   }
 }
 </script>

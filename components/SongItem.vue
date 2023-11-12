@@ -3,7 +3,7 @@ import { PlayerState } from '@/types'
 
 const props = defineProps<{
   song: any
-  safeToPlay: boolean
+  safeToPlay?: boolean
 }>()
 const emit = defineEmits(['playsong'])
 const store = usePlayer()
