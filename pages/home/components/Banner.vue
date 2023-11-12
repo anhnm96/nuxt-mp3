@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import type { Song } from '~/types'
+
 const props = defineProps<{ items: any }>()
+const router = useRouter()
 const activeIndex = ref(0)
 const isPaused = ref(false)
 let timeout: NodeJS.Timeout
@@ -49,6 +52,22 @@ function goNext() {
 function goPrevious() {
   activeIndex.value = previousIndex.value
 }
+
+const song = ref<Song>()
+const { execute } = useAsyncData(
+  'song-info',
+  () => getSongInfo(song.value!.encodeId),
+  { immediate: false, watch: [song] },
+)
+function playBanner(item: any) {
+  if (item.type === 1) {
+    execute()
+  }
+  if (item.type === 4) {
+    console.log(item.link) // /playlist/Doa-Hong-Nhac-Viet/ZA9U9FCI.html
+    // router.push(item.link.split('.')[0])
+  }
+}
 </script>
 
 <template>
@@ -68,7 +87,7 @@ function goPrevious() {
           current: index === activeIndex,
         }"
       >
-        <button class="inline-block">
+        <button class="inline-block" @click="playBanner(item)">
           <img :src="item.banner" alt="banner image" />
         </button>
       </div>
