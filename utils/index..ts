@@ -43,3 +43,7 @@ export function debounce(func: (...args: any) => void, delay = 0) {
     }, delay)
   }
 }
+
+export function getRandomUUID() {
+  return Date.now().toString(36) + Math.random().toString(36).substring(2, 15)
+}

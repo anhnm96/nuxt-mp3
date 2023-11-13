@@ -91,7 +91,7 @@ useHead({
 </script>
 
 <template>
-  <div>
+  <div id="main">
     <div class="flex bg-layout">
       <TheSidebar />
       <div class="flex-grow">

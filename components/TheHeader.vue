@@ -17,6 +17,10 @@ const disableForward = computed(() => {
   return window?.history.state.forward === null
 })
 
+// theme modal
+const showModal = ref(false)
+
+// search
 const { data: hotKeywords } = useAsyncData('hot-keyword', () =>
   getHotKeyword().then(({ data }) => data),
 )
@@ -191,6 +195,7 @@ function optionAdapter(item: any) {
       <button
         aria-label="select theme"
         class="flex h-10 w-10 items-center justify-center rounded-full bg-alpha"
+        @click="showModal = true"
       >
         <svg class="h-5 w-5" viewBox="0 0 20 20">
           <defs>
@@ -357,6 +362,9 @@ function optionAdapter(item: any) {
       </button>
     </div>
   </header>
+  <teleport to="body">
+    <ThemeModal v-model="showModal" />
+  </teleport>
 </template>
 
 <style>
