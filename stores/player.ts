@@ -1,6 +1,7 @@
 import { Howl } from 'howler'
 import { PlayerMode, PlayerState } from '@/types'
 import type { Playlist, Song } from '@/types'
+import { show } from '@/components/custom/Notification'
 
 interface SetStatePayload {
   prop: string
@@ -146,12 +147,12 @@ export const usePlayer = defineStore('player', {
         )
 
         if (data.value.err === -1110) {
-          // show({
-          //   position: 'top-right',
-          //   type: 'danger',
-          //   title: 'Sorry, this content may not be available',
-          //   showProgressbar: false,
-          // })
+          show({
+            position: 'top-right',
+            type: 'danger',
+            title: 'Sorry, this content may not be available',
+            showProgressbar: false,
+          })
           this.setState({
             prop: 'playerState',
             value: PlayerState.PAUSE,
