@@ -26,7 +26,7 @@ export interface Song {
   thumbnail: string
   thumbnailM: string
   hasLyric: boolean
-  mvLink: string
+  mvlink: string
   artists: Artist[]
   artistsNames: string
   duration: number

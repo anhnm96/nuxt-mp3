@@ -4,7 +4,7 @@ import { PlayerState } from '@/types'
 
 const props = defineProps<{
   song: Song
-  active: boolean
+  active?: boolean
 }>()
 const store = usePlayer()
 
@@ -54,7 +54,7 @@ const isLoading = computed(() => store.playerState === PlayerState.LOADING)
               'ic-play': (active && !isPlaying) || !active,
             }"
           />
-          <Loading v-if="isLoading && active" />
+          <Spinner v-if="isLoading && active" />
         </button>
       </div>
     </div>

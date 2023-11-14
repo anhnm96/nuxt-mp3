@@ -28,7 +28,7 @@ function transitionEnd() {
 </script>
 
 <template>
-  <div class="w-17 relative flex-shrink-0 transition-all duration-300 lg:w-64">
+  <div class="relative w-17 flex-shrink-0 transition-all duration-300 lg:w-64">
     <button
       v-if="show"
       class="fixed inset-0 z-30 h-full w-full cursor-default bg-transparent lg:hidden"
@@ -36,12 +36,12 @@ function transitionEnd() {
       @click="toggleExpand"
     />
     <aside
-      class="bg-sidebar-popup lg:bg-sidebar absolute inset-0 z-30 h-full transition-all duration-300 lg:relative lg:w-full"
+      class="absolute inset-0 z-30 h-full bg-sidebar-popup transition-all duration-300 lg:relative lg:w-full lg:bg-sidebar"
       :class="[show ? 'w-64' : 'w-17', { transitioning, expanded }]"
       @transitionend="transitionEnd"
     >
       <div
-        class="logo-wrapper h-17 flex items-center justify-center overflow-hidden lg:justify-start lg:px-6"
+        class="logo-wrapper flex h-17 items-center justify-center overflow-hidden lg:justify-start lg:px-6"
       >
         <NuxtLink to="/">
           <div class="logo" />
@@ -56,7 +56,7 @@ function transitionEnd() {
           >
             <a
               href="#"
-              class="hover:text-item-hover text-navigation flex items-center justify-center space-x-3 px-6 py-4 font-semibold lg:justify-start lg:py-2.5"
+              class="flex items-center justify-center space-x-3 px-6 py-4 font-semibold text-navigation hover:text-item-hover lg:justify-start lg:py-2.5"
             >
               <i :class="nav.iconClass" class="flex h-6 text-2xl" />
               <span
@@ -73,7 +73,7 @@ function transitionEnd() {
           <li v-for="nav in nav2" :key="nav.text">
             <a
               href="#"
-              class="hover:text-item-hover text-navigation flex items-center justify-center space-x-3 px-6 py-4 font-semibold lg:justify-start lg:py-2.5"
+              class="flex items-center justify-center space-x-3 px-6 py-4 font-semibold text-navigation hover:text-item-hover lg:justify-start lg:py-2.5"
             >
               <i :class="nav.iconClass" class="flex h-6 text-2xl" />
               <span
@@ -85,7 +85,7 @@ function transitionEnd() {
         </ul>
       </nav>
       <button
-        class="hover:text-item-hover text-primary bg-alpha absolute bottom-2 right-4 flex h-10 w-10 items-center justify-center rounded-full lg:hidden"
+        class="absolute bottom-2 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-alpha text-primary hover:text-item-hover lg:hidden"
         @click="toggleExpand"
       >
         <i class="flex" :class="[show ? 'ic-go-left' : 'ic-go-right']" />
@@ -121,7 +121,7 @@ aside:is(.transitioning, .expanded) li a span {
 }
 
 .link-active {
-  @apply bg-alpha border-purple-primary border-l-2;
+  @apply border-l-2 border-purple-primary bg-alpha;
 }
 
 .link-active a {

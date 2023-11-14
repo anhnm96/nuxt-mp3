@@ -27,7 +27,11 @@ const { data: hotKeywords } = useAsyncData('hot-keyword', () =>
 
 const searchTerm = ref<string>('')
 
-const { data: suggestions, execute: execGetSuggestions } = useAsyncData(
+const {
+  data: suggestions,
+  status,
+  execute: execGetSuggestions,
+} = useAsyncData(
   'suggestions',
   () =>
     getSuggestions(searchTerm.value).then(({ data }: any) => {
@@ -131,6 +135,7 @@ function optionAdapter(item: any) {
           placeholder="Nhập tên bài hát, nghệ sĩ hoặc MV"
           menu-class="py-3 px-2.5 mt-0 rounded-b-lg bg-primary"
           :blur-on-select="true"
+          :loading="status === 'pending'"
           @select="onSelect"
           @keydown.space.stop
         >

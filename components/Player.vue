@@ -148,7 +148,7 @@ const setNextPlayerMode = () => store.setNextPlayerMode()
                 'ic-play-circle-outline': playerState === PlayerState.PAUSE,
               }"
             />
-            <Loading v-if="playerState === PlayerState.LOADING" />
+            <Spinner v-if="playerState === PlayerState.LOADING" />
           </button>
           <button
             class="flex h-8 w-8 items-center justify-center rounded-full text-base text-player hover:bg-alpha focus:outline-none"

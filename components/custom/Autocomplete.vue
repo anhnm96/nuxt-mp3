@@ -54,6 +54,7 @@ const props = defineProps({
     default: (keyword: string, item: AdaptedOption) =>
       item.label.toLowerCase().includes(keyword.toLowerCase()),
   },
+  loading: Boolean,
 })
 const emit = defineEmits(['update:input', 'update:selected', 'select'])
 const timeId = Date.now()
@@ -213,6 +214,7 @@ function safeSalect(item: AdaptedOption) {
       @focus="show = true"
       @click="show = true"
     />
+    <Spinner v-if="loading" class="absolute right-2 top-0" />
     <div
       v-if="show"
       ref="dropdownEl"
