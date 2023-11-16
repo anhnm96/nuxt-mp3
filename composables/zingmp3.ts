@@ -48,3 +48,7 @@ export function getSuggestions(query: string) {
 export function getPlaylistDetail(id: string) {
   return fetchZingMp3('page/get/playlist', { id })
 }
+
+export function getLyric(id: string) {
+  return fetchZingMp3('lyric/get/lyric', { id })
+}

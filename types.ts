@@ -67,3 +67,8 @@ interface SongResult {
   total: number
   totalDuration: number
 }
+
+export interface Lyric {
+  time: number
+  content: string
+}

@@ -105,5 +105,8 @@ useHead({
       <Playlist />
     </div>
     <Player v-if="playerStore.songList.length > 0" class="z-50" />
+    <keep-alive>
+      <Lyric v-if="playerStore.showLyric" />
+    </keep-alive>
   </div>
 </template>
