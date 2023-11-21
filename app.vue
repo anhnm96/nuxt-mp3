@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Scrollbar from 'smooth-scrollbar'
+
 const playerStore = usePlayer()
 
 watch(
@@ -10,6 +12,7 @@ watch(
     playerStore.fetchStreamingAction()
   },
 )
+const main = ref()
 let resizeObserver: ResizeObserver
 onMounted(() => {
   if (document.body.offsetWidth < 1637)
@@ -34,9 +37,11 @@ onMounted(() => {
     }
   })
   resizeObserver.observe(document.body)
+  Scrollbar.init(main.value, { damping: 0.2 })
 })
 
 onBeforeUnmount(() => {
+  Scrollbar.destroy(main.value)
   resizeObserver.disconnect()
 })
 
@@ -96,7 +101,10 @@ useHead({
       <TheSidebar />
       <div class="flex-grow">
         <TheHeader />
-        <main :class="playerStore.songList.length > 0 ? 'h-main' : 'h-main-2'">
+        <main
+          ref="main"
+          :class="playerStore.songList.length > 0 ? 'h-main' : 'h-main-2'"
+        >
           <div class="mx-auto py-5" style="max-width: 90%">
             <NuxtPage />
           </div>

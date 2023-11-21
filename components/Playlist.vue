@@ -1,7 +1,18 @@
 <script setup lang="ts">
+import Scrollbar from 'smooth-scrollbar'
+
 const playerStore = usePlayer()
 const currentSong = computed(() => playerStore.currentSong)
 const showPlaylist = computed(() => playerStore.showPlaylist)
+
+const scroll = ref()
+onMounted(() => {
+  Scrollbar.init(scroll.value, { damping: 0.2 })
+})
+
+onBeforeUnmount(() => {
+  Scrollbar.destroy(scroll.value)
+})
 
 function close(e: MouseEvent) {
   if (!showPlaylist.value) return
@@ -48,7 +59,7 @@ function close(e: MouseEvent) {
       </button>
     </div>
     <div class="px-2">
-      <div v-show="currentSong" class="h-main">
+      <div v-show="currentSong" ref="scroll" class="h-main">
         <template v-if="currentSong">
           <!-- Previous songs -->
           <SongQueue
