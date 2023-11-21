@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Karaoke from './Karaoke.vue'
 import { PlayerState } from '@/types'
 import type { Lyric } from '@/types'
 
@@ -62,18 +61,22 @@ const bgImageBellow = computed(
 
 // toggle style var
 onActivated(() => {
+  document.body.style.overflow = 'hidden'
   document.body.style.setProperty('--player-text', '#fff')
 })
 
+let timeout: NodeJS.Timeout
+
 onDeactivated(() => {
+  document.body.style.overflow = ''
+  clearTimeout(timeout)
+  clearTimeout(timeBg)
   document.body.style.removeProperty('--player-text')
 })
 
 onMounted(() => {
   document.body.style.overflow = 'hidden'
 })
-
-let timeout: NodeJS.Timeout
 
 onBeforeUnmount(() => {
   document.body.style.overflow = ''

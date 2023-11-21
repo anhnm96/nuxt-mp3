@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { Playlist, Song } from '@/types'
 
+definePageMeta({
+  alias: '/album/:name/:id',
+})
 const store = usePlayer()
 const route = useRoute()
 const id = route.params.id as string
@@ -35,7 +38,7 @@ function playsong(song: Song) {
 <template>
   <div class="flex flex-col clg:flex-row clg:space-x-9">
     <h4 v-if="pending">Loading...</h4>
-    <template v-if="album">
+    <template v-else-if="album">
       <!-- left -->
       <div class="album-info">
         <div class="album-wrapper sticky top-0">

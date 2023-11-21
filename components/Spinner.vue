@@ -4,7 +4,7 @@
       class="lds-spinner"
       width="40px"
       height="40px"
-      fill="#f1f1f1"
+      fill="currentColor"
       viewBox="0 0 100 100"
       preserveAspectRatio="xMidYMid"
       style="background: none"
