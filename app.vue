@@ -96,6 +96,7 @@ useHead({
 </script>
 
 <template>
+  <NuxtLoadingIndicator />
   <div id="main">
     <div class="flex bg-layout">
       <TheSidebar />

@@ -21,7 +21,7 @@ const disableForward = computed(() => {
 const showModal = ref(false)
 
 // search
-const { data: hotKeywords } = useAsyncData('hot-keyword', () =>
+const { data: hotKeywords } = await useAsyncData('hot-keyword', () =>
   getHotKeyword().then(({ data }) => data),
 )
 
@@ -166,7 +166,7 @@ function optionAdapter(item: any) {
             </div>
             <div
               v-else
-              class="flex select-none items-center space-x-2 truncate rounded-md px-4 py-2 text-sm text-primary hover:bg-alpha"
+              class="flex cursor-pointer select-none items-center space-x-2 truncate rounded-md px-4 py-2 text-sm text-primary hover:bg-alpha"
               :class="isActive && 'bg-alpha'"
               @click="select(item)"
             >
