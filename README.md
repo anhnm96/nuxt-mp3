@@ -1,6 +1,20 @@
-# Nuxt 3 Minimal Starter
+# [Demo](http://ec2-52-221-214-168.ap-southeast-1.compute.amazonaws.com)
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Screenshots
+![Home](./screenshots/home.png "Home page")
+![Album](./screenshots/album.png "Album page")
+![Lyric](./screenshots/lyric.png "Lyric page")
+![Karaoke](./screenshots/karaoke.png "Karaoke page")
+![Theme modal](./screenshots/theme.png "Them modal")
+![Idol theme](./screenshots/lisa.png "Idol theme")
+
+## Features
+- Play song like a music player...
+- Shuffle list
+- Karaoke
+- Seek by lyric
+- Change theme
+- More...
 
 ## Setup
 
