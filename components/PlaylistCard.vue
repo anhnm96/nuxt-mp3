@@ -6,7 +6,7 @@ const props = defineProps<{
   showArtist?: boolean
 }>()
 const playerStore = usePlayer()
-const { execute: fetchSongList } = useAsyncData(
+const { status, execute: fetchSongList } = useAsyncData(
   'songlist',
   () =>
     getSongList(props.item.encodeId).then(({ data }) => {
@@ -20,11 +20,8 @@ const { execute: fetchSongList } = useAsyncData(
   { immediate: false },
 )
 
-const isActive = computed<boolean>(() => {
-  return (
-    props.item.encodeId === playerStore.playlist?.encodeId &&
-    playerStore.isPlaying
-  )
+const isActive = computed(() => {
+  return props.item.encodeId === playerStore.playlist?.encodeId
 })
 
 function fetchListAndPlay() {
@@ -57,9 +54,15 @@ function fetchListAndPlay() {
           class="flex h-11 w-11 items-center justify-center rounded-full border border-white text-xl text-white hover:border-gray-200 hover:text-gray-200 focus:outline-none"
           @click="fetchListAndPlay"
         >
+          <Spinner v-if="status === 'pending'" />
           <i
+            v-else
             class="icon flex"
-            :class="isActive ? 'ic-gif-playing-white' : 'ic-play'"
+            :class="
+              isActive && playerStore.isPlaying
+                ? 'ic-gif-playing-white'
+                : 'ic-play'
+            "
           />
         </button>
         <button

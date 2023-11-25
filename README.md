@@ -1,4 +1,5 @@
-# [Demo](http://ec2-52-221-214-168.ap-southeast-1.compute.amazonaws.com)
+# [Demo](https://nuxt-mp3.vercel.app)
+Note: This project has been migrated from [this one](https://github.com/xiaosasori/vite-zingmp3). At that time, Vue 3 had just been released, so you may find that the code still needs a lot of refactoring.
 
 ## Screenshots
 ![Home](./screenshots/home.png "Home page")
