@@ -146,7 +146,7 @@ export const usePlayer = defineStore('player', {
           getStreaming(this.currentSong.encodeId, this.currentSong.isWorldWide),
         )
 
-        if (data.value.err === -1110) {
+        if (data.value.err === -1110 || data.value.err === -1150) {
           show({
             position: 'top-right',
             type: 'danger',

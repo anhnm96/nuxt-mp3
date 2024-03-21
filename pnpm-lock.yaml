@@ -11,15 +11,15 @@ dependencies:
   howler:
     specifier: ^2.2.4
     version: 2.2.4
-  https-proxy-agent:
-    specifier: ^7.0.2
-    version: 7.0.2
   pinia:
     specifier: ^2.1.7
     version: 2.1.7(typescript@5.2.2)(vue@3.3.7)
   smooth-scrollbar:
     specifier: ^8.8.4
     version: 8.8.4
+  undici:
+    specifier: ^6.10.1
+    version: 6.10.1
 
 devDependencies:
   '@antfu/eslint-config':
@@ -7152,6 +7152,11 @@ packages:
     dependencies:
       '@fastify/busboy': 2.0.0
     dev: true
+
+  /undici@6.10.1:
+    resolution: {integrity: sha512-kSzmWrOx3XBKTgPm4Tal8Hyl3yf+hzlA00SAf4goxv8LZYafKmS6gJD/7Fe5HH/DMNiFTRXvkwhLo7mUn5fuQQ==}
+    engines: {node: '>=18.0'}
+    dev: false
 
   /unenv@1.7.4:
     resolution: {integrity: sha512-fjYsXYi30It0YCQYqLOcT6fHfMXsBr2hw9XC7ycf8rTG7Xxpe3ZssiqUnD0khrjiZEmkBXWLwm42yCSCH46fMw==}

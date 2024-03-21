@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import crypto from 'node:crypto'
 
-// import { HttpsProxyAgent } from 'https-proxy-agent'
+import { ProxyAgent } from 'undici'
 
 function getHash256(str: string) {
   return crypto.createHash('sha256').update(str).digest('hex')
@@ -43,11 +43,8 @@ export default defineEventHandler(async (event) => {
       config.secretKey,
     )
   }
-  // const agent = new HttpsProxyAgent({
-  //   host: config.proxyHost,
-  //   port: config.proxyPort,
-  //   auth: config.proxyAuth,
-  // })
+
+  const agent = new ProxyAgent({ uri: `http://${config.proxyAuth}@${config.proxyHost}:${config.proxyPort}`, requestTls: { rejectUnauthorized: false } })
 
   let cookie: string
   function getCookie() {
@@ -75,7 +72,6 @@ export default defineEventHandler(async (event) => {
         : query.id
           ? hashParam(requestUrl.pathname, String(query.id))
           : hashParamNoId(requestUrl.pathname),
-      // agent,
       ...query,
     }
 
@@ -95,6 +91,7 @@ export default defineEventHandler(async (event) => {
       headers: {
         Cookie: cookie,
       },
+      dispatcher: query.isWorldWide === 'false' ? agent : undefined
     })
   } catch (e: any) {
     const status = e?.response?.status || 500
