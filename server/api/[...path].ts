@@ -91,7 +91,7 @@ export default defineEventHandler(async (event) => {
       headers: {
         Cookie: cookie,
       },
-      dispatcher: query.isWorldWide === 'false' ? agent : undefined
+      dispatcher: query.isWorldWide === 'true' ? agent : undefined
     })
   } catch (e: any) {
     const status = e?.response?.status || 500

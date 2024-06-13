@@ -8,6 +8,7 @@ const props = withDefaults(
     cssClass?: string
     auto?: boolean
     range?: RandomRange
+    animate?: boolean
   }>(),
   {
     cssClass: 'bg-neutral-500 rounded',

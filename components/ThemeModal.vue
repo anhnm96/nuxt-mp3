@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ModalTitle } from '@/components/custom/modal/ModalChildren'
+
 defineProps<{ modelValue?: boolean }>()
 
 defineEmits(['update:modelValue'])
