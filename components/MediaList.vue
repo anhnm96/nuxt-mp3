@@ -45,8 +45,8 @@ withDefaults(
     </template>
     <template #default>
       <CarouselItem
-        v-for="item in items"
-        :key="item.title"
+        v-for="(item, index) in items.slice(0, 18)"
+        :key="index"
         class="flex-shrink-0 select-none px-3"
         :class="[itemClass]"
       >

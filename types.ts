@@ -42,7 +42,8 @@ export interface Artist {
 }
 
 export interface Playlist {
-  encodeId: string
+  encodeId?: string
+  id?: string
   title: string
   thumbnail: string
   isoffical: string

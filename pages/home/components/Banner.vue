@@ -63,7 +63,7 @@ function playBanner(item: any) {
   if (item.type === 1) {
     execute()
   }
-  if (item.type === 4) {
+  if (item.type === 2) {
     router.push(item.link.split('.')[0])
   }
 }
@@ -87,7 +87,7 @@ function playBanner(item: any) {
         }"
       >
         <button class="inline-block" @click="playBanner(item)">
-          <img :src="item.banner" alt="banner image" />
+          <img :src="item.thumbnail" alt="banner image" height="300px" />
         </button>
       </div>
       <!-- dummy card placeholder for the height -->
@@ -96,7 +96,7 @@ function playBanner(item: any) {
         style="position: relative"
       >
         <a href="#" class="inline-block">
-          <img :src="items[0].banner" alt="banner image" />
+          <img :src="items[0].thumbnail" alt="banner image" height="300px" />
         </a>
       </div>
     </div>
@@ -124,7 +124,7 @@ function playBanner(item: any) {
 }
 
 .slider-item {
-  @apply absolute inset-x-0 m-auto w-[70%] translate-x-0 transform;
+  @apply absolute inset-x-0 m-auto w-[70%] translate-x-0 transform text-center;
   transition: all 0.7s ease-out;
 }
 
@@ -159,6 +159,6 @@ function playBanner(item: any) {
 }
 
 .slider-item img {
-  @apply h-auto w-full rounded-lg;
+  @apply h-[300px] w-full rounded-lg;
 }
 </style>

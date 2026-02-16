@@ -18,7 +18,7 @@ const { data, pending } = await useAsyncData('home', () => getHome(1))
   </div>
   <template v-else-if="data">
     <template v-for="(section, index) in data.data.items">
-      <section v-if="section.sectionType === 'banner'" :key="index">
+      <section v-if="section.sectionType === 'quickPlay'" :key="index">
         <Banner :items="section.items" />
       </section>
       <MediaList
