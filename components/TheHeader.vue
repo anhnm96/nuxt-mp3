@@ -55,14 +55,14 @@ watch(
 )
 
 const selectedId = ref('')
-useAsyncData(
-  'song-info',
+const { execute: fetchSongInfo } = useAsyncData(
+  selectedId,
   () =>
     getSongInfo(selectedId.value).then(({ data }: any) => {
       store.setState({ prop: 'playlist', value: null })
       store.setState({ prop: 'currentSong', value: data })
     }),
-  { watch: [selectedId], immediate: false },
+  { immediate: false },
 )
 
 function onSelect(item: any) {
@@ -72,7 +72,10 @@ function onSelect(item: any) {
       query: { q: item.keyword ? item.keyword : item },
     })
   }
-  if (item.type === 1) selectedId.value = item.id
+  if (item.type === 1) {
+    selectedId.value = item.id
+    fetchSongInfo()
+  }
 }
 
 // adapter options for autocomplete input
