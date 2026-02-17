@@ -6,10 +6,11 @@ const props = defineProps<{
   showArtist?: boolean
 }>()
 const playerStore = usePlayer()
+const songId = computed(() => props.item.encodeId!)
 const { status, execute: fetchSongList } = useAsyncData(
-  'songlist',
+  songId,
   () =>
-    getSongList(props.item.encodeId).then(({ data }) => {
+    getSongList(songId.value).then(({ data }) => {
       playerStore.setState({ prop: 'playlist', value: data })
       playerStore.setState({
         prop: 'currentSong',
@@ -21,7 +22,7 @@ const { status, execute: fetchSongList } = useAsyncData(
 )
 
 const isActive = computed(() => {
-  return props.item.encodeId === playerStore.playlist?.encodeId
+  return songId.value === playerStore.playlist?.encodeId
 })
 
 function fetchListAndPlay() {
